@@ -1,3 +1,5 @@
+Please Note(Edited by hvkwak on 20.10.2021): train.py tested under Tensorflow 2.4, CUDA 11.1, cudnn 8.0.5.
+
 ## PointNet: *Deep Learning on Point Sets for 3D Classification and Segmentation*
 Created by <a href="http://charlesrqi.com" target="_blank">Charles R. Qi</a>, <a href="http://ai.stanford.edu/~haosu/" target="_blank">Hao Su</a>, <a href="http://cs.stanford.edu/~kaichun/" target="_blank">Kaichun Mo</a>, <a href="http://geometry.stanford.edu/member/guibas/" target="_blank">Leonidas J. Guibas</a> from Stanford University.
 
