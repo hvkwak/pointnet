@@ -9,8 +9,8 @@ sys.path.append(os.path.join(BASE_DIR, '../utils'))
 import tf_util
 
 def placeholder_inputs(batch_size, num_point):
-    pointclouds_pl = tf.placeholder(tf.float32, shape=(batch_size, num_point, 3))
-    labels_pl = tf.placeholder(tf.int32, shape=(batch_size))
+    pointclouds_pl = tf.compat.v1.placeholder(tf.float32, shape=(batch_size, num_point, 3))
+    labels_pl = tf.compat.v1.placeholder(tf.int32, shape=(batch_size))
     return pointclouds_pl, labels_pl
 
 
@@ -64,8 +64,8 @@ def get_loss(pred, label, end_points):
     """ pred: B*NUM_CLASSES,
         label: B, """
     loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=pred, labels=label)
-    classify_loss = tf.reduce_mean(loss)
-    tf.summary.scalar('classify loss', classify_loss)
+    classify_loss = tf.reduce_mean(input_tensor=loss)
+    tf.compat.v1.summary.scalar('classify loss', classify_loss)
     return classify_loss
 
 

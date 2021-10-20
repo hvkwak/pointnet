@@ -10,9 +10,9 @@ sys.path.append(os.path.join(ROOT_DIR, 'utils'))
 import tf_util
 
 def placeholder_inputs(batch_size, num_point):
-    pointclouds_pl = tf.placeholder(tf.float32,
+    pointclouds_pl = tf.compat.v1.placeholder(tf.float32,
                                      shape=(batch_size, num_point, 9))
-    labels_pl = tf.placeholder(tf.int32,
+    labels_pl = tf.compat.v1.placeholder(tf.int32,
                                 shape=(batch_size, num_point))
     return pointclouds_pl, labels_pl
 
@@ -61,14 +61,14 @@ def get_loss(pred, label):
     """ pred: B,N,13
         label: B,N """
     loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=pred, labels=label)
-    return tf.reduce_mean(loss)
+    return tf.reduce_mean(input_tensor=loss)
 
 if __name__ == "__main__":
     with tf.Graph().as_default():
-        a = tf.placeholder(tf.float32, shape=(32,4096,9))
+        a = tf.compat.v1.placeholder(tf.float32, shape=(32,4096,9))
         net = get_model(a, tf.constant(True))
-        with tf.Session() as sess:
-            init = tf.global_variables_initializer()
+        with tf.compat.v1.Session() as sess:
+            init = tf.compat.v1.global_variables_initializer()
             sess.run(init)
             start = time.time()
             for i in range(100):

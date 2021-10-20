@@ -10,9 +10,9 @@ import tf_util
 from transform_nets import input_transform_net, feature_transform_net
 
 def placeholder_inputs(batch_size, num_point):
-    pointclouds_pl = tf.placeholder(tf.float32,
+    pointclouds_pl = tf.compat.v1.placeholder(tf.float32,
                                      shape=(batch_size, num_point, 3))
-    labels_pl = tf.placeholder(tf.int32,
+    labels_pl = tf.compat.v1.placeholder(tf.int32,
                                 shape=(batch_size, num_point))
     return pointclouds_pl, labels_pl
 
@@ -23,7 +23,7 @@ def get_model(point_cloud, is_training, bn_decay=None):
     num_point = point_cloud.get_shape()[1].value
     end_points = {}
 
-    with tf.variable_scope('transform_net1') as sc:
+    with tf.compat.v1.variable_scope('transform_net1') as sc:
         transform = input_transform_net(point_cloud, is_training, bn_decay, K=3)
     point_cloud_transformed = tf.matmul(point_cloud, transform)
     input_image = tf.expand_dims(point_cloud_transformed, -1)
@@ -37,7 +37,7 @@ def get_model(point_cloud, is_training, bn_decay=None):
                          bn=True, is_training=is_training,
                          scope='conv2', bn_decay=bn_decay)
 
-    with tf.variable_scope('transform_net2') as sc:
+    with tf.compat.v1.variable_scope('transform_net2') as sc:
         transform = feature_transform_net(net, is_training, bn_decay, K=64)
     end_points['transform'] = transform
     net_transformed = tf.matmul(tf.squeeze(net, axis=[2]), transform)
@@ -93,13 +93,13 @@ def get_loss(pred, label, end_points, reg_weight=0.001):
     """ pred: BxNxC,
         label: BxN, """
     loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=pred, labels=label)
-    classify_loss = tf.reduce_mean(loss)
+    classify_loss = tf.reduce_mean(input_tensor=loss)
     tf.scalar_summary('classify loss', classify_loss)
 
     # Enforce the transformation as orthogonal matrix
     transform = end_points['transform'] # BxKxK
     K = transform.get_shape()[1].value
-    mat_diff = tf.matmul(transform, tf.transpose(transform, perm=[0,2,1]))
+    mat_diff = tf.matmul(transform, tf.transpose(a=transform, perm=[0,2,1]))
     mat_diff -= tf.constant(np.eye(K), dtype=tf.float32)
     mat_diff_loss = tf.nn.l2_loss(mat_diff) 
     tf.scalar_summary('mat_loss', mat_diff_loss)
