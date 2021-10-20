@@ -1,4 +1,5 @@
-## Please Note(Edited by hvkwak on 20.10.2021): train.py tested under Tensorflow 2.4, CUDA 11.1, cudnn 8.0.5.
+## Note(Edited by hvkwak on 20.10.2021) 
+train.py tested under Tensorflow 2.4, CUDA 11.1, cudnn 8.0.5.
 
 
 
