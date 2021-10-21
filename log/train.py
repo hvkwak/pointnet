@@ -103,7 +103,7 @@ def train():
             bn_decay = get_bn_decay(batch)
             tf.compat.v1.summary.scalar('bn_decay', bn_decay)
 
-            # Get model and loss 
+            # Get model and loss (Note: pred is net, end_points is a dictionary of transformation matrix)
             pred, end_points = MODEL.get_model(pointclouds_pl, is_training_pl, bn_decay=bn_decay)
             loss = MODEL.get_loss(pred, labels_pl, end_points)
             tf.compat.v1.summary.scalar('loss', loss)
